@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+    margin: 0px;
+    height: 100vh;
+    width: 100vw;
+}
+</style>
+<body>
+    <main id="guardadas">
+
+    </main>
+</body>
+<script src="carta.js"></script>
+<script>
+let storage = JSON.parse(localStorage.getItem("misCartas"));
+console.log(storage)
+function $(id){
+    return document.getElementById(id);
+}
+
+const contenedorGuardadas = $("guardadas")
+
+function mostrarCartas(listaCartas){
+
+    listaCartas.forEach(element => {
+        var cartaCreada = document.createElement("img");
+        cartaCreada.setAttribute("src", element.image);
+        contenedorGuardadas.appendChild(cartaCreada);
+    });
+}
+
+mostrarCartas(storage);
+
+</script>
+</html>
