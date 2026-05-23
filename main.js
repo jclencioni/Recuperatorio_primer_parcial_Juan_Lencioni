@@ -1,56 +1,79 @@
+let paginaActual = 1;
+let indiceSerieInical = 1;
 
-function $(id){
-    return document.getElementById(id);
-}
+async function traerSeries(indPrimerSerie) {
 
-const contenedorCartas = $("cartas")
-    
+    var listaSeries = [];
+    const limite = indPrimerSerie + 6;
 
-async function crearCartas(listaCartas){
-    
-    listaCartas.forEach(element => {
+    for(let i = indPrimerSerie; i < limite; i++){
+        const urlBase = "https://api.tvmaze.com/shows/";
+        var urlBusqueda = urlBase + i;
 
-        var carta = Carta.createFromJsonString(JSON.stringify(element));
-        var cartaCreada = carta.createHTMLElement(); 
-        contenedorCartas.appendChild(cartaCreada);
-    });
-}
-
-async function cargarTandaCartas() {
-    const urlBase = "https://deckofcardsapi.com/api/deck/new/draw/?count=6";
-
-    try {
-        var respuesta = await fetch(urlBase);
-        
-        if (!respuesta.ok) {
-            alert("Carta no encontrada");
-        } else {
-            var rta = await respuesta.json(); 
-            var cartas = rta.cards;  
-            console.log(cartas);
-            await crearCartas(cartas);
-
+        try {
+            var respuesta = await fetch(urlBusqueda);
+            if (!respuesta.ok) {
+                alert("Serie no encontrada");
+            } else {
+                var rta = await respuesta.json();
+                listaSeries.push(rta);                
+            }
+        } catch (error) {
+            alert("Se perdió la conexion.")
         }
-    } catch (error) {
-        alert("Se perdió la conexion.")
     }
+    console.log(listaSeries);
+    return listaSeries;
 }
 
-async function PaginaSiguiente(){
-    contenedorCartas.innerHTML = "";
-    await cargarTandaCartas();
+function mostrarSeries(seriesData) {
+  const contenedor = document.getElementById('series');
+  contenedor.innerHTML = '';
+  console.log(seriesData);
+  seriesData.forEach(s => {
+
+    const serie = new Serie(
+        s.id,
+        s.url,
+        s.name,
+        s.language,
+        s.genres, 
+        s.image.medium
+    );
+
+    console.log(serie);
+    contenedor.appendChild(serie.createHtmlElement());
+  });
 }
 
-async function PaginaAnterior(){
-    contenedorCartas.innerHTML = "";
-    await cargarTandaCartas();
+async function cargarPagina() {
+  const contenedor = document.getElementById('series');
+  contenedor.innerHTML = '<p>cargando series...</p>';
+  
+  const series = await traerSeries(indiceSerieInical);
+  mostrarSeries(series);
 }
 
-$("siguiente").addEventListener("click", PaginaSiguiente);
-$("anterior").addEventListener("click", PaginaAnterior);
+async function paginaSig() {
+  paginaActual++;
+  indiceSerieInical += 6;
+  await cargarPagina();
+}
 
+async function paginaAnt() {
+  if (paginaActual > 1) {
+    paginaActual--;
+    indiceSerieInical -= 6;
+    await cargarPagina();
+  } else {
+    alert('ya estas en la primera página');
+  }
+}
 
+document.getElementById('siguiente').addEventListener('click', paginaSig);
+document.getElementById('anterior').addEventListener('click', paginaAnt);
 
-cargarTandaCartas();
+cargarPagina();
+
 
 

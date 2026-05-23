@@ -17,26 +17,8 @@
 
     </main>
 </body>
-<script src="carta.js"></script>
-<script>
-let storage = JSON.parse(localStorage.getItem("misCartas"));
-console.log(storage)
-function $(id){
-    return document.getElementById(id);
-}
-
-const contenedorGuardadas = $("guardadas")
-
-function mostrarCartas(listaCartas){
-
-    listaCartas.forEach(element => {
-        var cartaCreada = document.createElement("img");
-        cartaCreada.setAttribute("src", element.image);
-        contenedorGuardadas.appendChild(cartaCreada);
-    });
-}
-
-mostrarCartas(storage);
+<script src="serie.js"></script>
+<script src="guardados.js">
 
 </script>
 </html>
