@@ -49,4 +49,8 @@ async function PaginaAnterior(){
 $("siguiente").addEventListener("click", PaginaSiguiente);
 $("anterior").addEventListener("click", PaginaAnterior);
 
+
+
 cargarTandaCartas();
+
+
